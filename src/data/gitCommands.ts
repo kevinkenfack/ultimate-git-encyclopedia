@@ -16,7 +16,7 @@ export const GitCommandCategories = [
               fullCommand: 'git config --global user.email "[email]"',
               description: 'Définit votre email global pour Git',
               detailedExplanation: 'Configure votre email pour l\'identification lors des commits. Important pour la traçabilité dans les projets collaboratifs.',
-              example: 'git config --global user.email "kenfack@ntexemple.com"',
+              example: 'git config --global user.email "example@domain.com"',
               difficulty: 'Débutant'
             },
             {
@@ -61,6 +61,13 @@ export const GitCommandCategories = [
               detailedExplanation: 'Télécharge intégralement un projet depuis un dépôt distant, incluant toute son historique de versions et branches.',
               example: 'git clone https://github.com/utilisateur/projet.git',
               difficulty: 'Débutant'
+            },
+            {
+              fullCommand: 'git clone --depth=1 [url]',
+              description: 'Clone uniquement les derniers commits',
+              detailedExplanation: 'Effectue un clonage "shallow" pour récupérer uniquement les dernières modifications et économiser de l\'espace disque.',
+              example: 'git clone --depth=1 https://github.com/utilisateur/projet.git',
+              difficulty: 'Intermédiaire'
             }
           ]
         }
@@ -76,7 +83,7 @@ export const GitCommandCategories = [
               fullCommand: 'git add [fichier]',
               description: 'Ajoute des fichiers à l\'index',
               detailedExplanation: 'Prépare les modifications pour un commit. Permet de choisir précisément quels fichiers seront inclus dans le prochain commit.',
-              example: 'git add fichier.txt  ou  git add .',
+              example: 'git add fichier.txt ou git add .',
               difficulty: 'Débutant'
             }
           ]
@@ -103,35 +110,61 @@ export const GitCommandCategories = [
       ]
     },
     {
-      category: 'Branches et Fusion',
+      category: 'Synchronisation',
       commands: [
         {
-          command: 'git branch',
+          command: 'git fetch',
           subCommands: [
             {
-              fullCommand: 'git branch [nom-branche]',
-              description: 'Crée une nouvelle branche',
-              detailedExplanation: 'Crée une nouvelle branche basée sur la branche courante. Ne bascule pas automatiquement sur la nouvelle branche.',
-              example: 'git branch fonctionnalite-x',
+              fullCommand: 'git fetch',
+              description: 'Récupère les modifications depuis le dépôt distant',
+              detailedExplanation: 'Télécharge les nouvelles branches et commits du dépôt distant sans les fusionner avec votre branche locale.',
+              example: 'git fetch',
               difficulty: 'Débutant'
             },
             {
-              fullCommand: 'git branch -d [nom-branche]',
-              description: 'Supprime une branche',
-              detailedExplanation: 'Supprime la branche spécifiée. Ne supprimera pas une branche non fusionnée sauf avec -D.',
-              example: 'git branch -d fonctionnalite-x',
+              fullCommand: 'git fetch origin',
+              description: 'Récupère les modifications d\'un dépôt spécifique',
+              detailedExplanation: 'Télécharge les branches et commits spécifiques depuis le dépôt "origin" configuré.',
+              example: 'git fetch origin',
               difficulty: 'Intermédiaire'
             }
           ]
         },
         {
-          command: 'git merge',
+          command: 'git pull',
           subCommands: [
             {
-              fullCommand: 'git merge [branche]',
-              description: 'Fusionne une branche avec la branche courante',
-              detailedExplanation: 'Intègre l\'historique d\'une autre branche dans la branche courante. Peut nécessiter la résolution de conflits.',
-              example: 'git merge fonctionnalite-x',
+              fullCommand: 'git pull',
+              description: 'Récupère et fusionne les modifications d’un dépôt distant.',
+              detailedExplanation: 'La commande "git pull" combine "git fetch" et "git merge" pour récupérer les modifications depuis le dépôt distant configuré pour la branche courante et les fusionner avec la branche locale.',
+              example: 'git pull',
+              difficulty: 'Débutant'
+            },
+            {
+              fullCommand: 'git pull origin main',
+              description: 'Récupère les modifications de la branche principale depuis le dépôt distant.',
+              detailedExplanation: 'Cette commande spécifie le dépôt distant ("origin") et la branche ("main") pour récupérer les dernières modifications et les fusionner avec la branche courante.',
+              example: 'git pull origin main',
+              difficulty: 'Intermédiaire'
+            }
+          ]
+        },
+        {
+          command: 'git push',
+          subCommands: [
+            {
+              fullCommand: 'git push',
+              description: 'Envoie les modifications vers le dépôt distant',
+              detailedExplanation: 'Publie les commits locaux vers le dépôt distant associé à la branche courante.',
+              example: 'git push',
+              difficulty: 'Débutant'
+            },
+            {
+              fullCommand: 'git push origin main',
+              description: 'Envoie les modifications vers une branche spécifique',
+              detailedExplanation: 'Cette commande publie les modifications locales sur la branche "main" du dépôt "origin".',
+              example: 'git push origin main',
               difficulty: 'Intermédiaire'
             }
           ]
@@ -139,3 +172,4 @@ export const GitCommandCategories = [
       ]
     }
   ];
+  
