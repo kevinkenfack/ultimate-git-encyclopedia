@@ -10,6 +10,19 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  openGraph: {
+    title: 'Tout ce qu’il faut savoir sur Git',
+    description: 'Apprenez les bases essentielles de Git de manière simple et intuitive.',
+    url: 'https://git-guide.kevinkenfack.com',
+    images: [
+      {
+        url: '/social.png',
+        width: 1200,
+        height: 630,
+        alt: 'Une image descriptive pour le guide Git',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
