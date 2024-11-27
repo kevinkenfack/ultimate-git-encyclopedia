@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: 'https://git-guide.kevinkenfack.com',
     images: [
       {
-        url: '/social.png',
+        url: 'https://git-guide.kevinkenfack.com/social.png',
         width: 1200,
         height: 630,
         alt: 'Une image descriptive pour le guide Git',
