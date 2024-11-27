@@ -9,14 +9,14 @@ export const GitCommandCategories = [
               fullCommand: 'git config --global user.name "[nom]"',
               description: 'Définit votre nom global pour Git',
               detailedExplanation: 'Configure votre identité pour tous les dépôts Git. Utilisé pour tracker les commits à travers tous vos projets.',
-              example: 'git config --global user.name "Jean Dupont"',
+              example: 'git config --global user.name "Votre Nom"',
               difficulty: 'Débutant'
             },
             {
               fullCommand: 'git config --global user.email "[email]"',
               description: 'Définit votre email global pour Git',
               detailedExplanation: 'Configure votre email pour l\'identification lors des commits. Important pour la traçabilité dans les projets collaboratifs.',
-              example: 'git config --global user.email "jean.dupont@exemple.com"',
+              example: 'git config --global user.email "kenfack@ntexemple.com"',
               difficulty: 'Débutant'
             },
             {

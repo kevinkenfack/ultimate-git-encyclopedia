@@ -1,27 +1,32 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Encyclopédie Git',
-  description: 'Encyclopédie interactive des commandes Git',
+  title: 'Tout ce qu’il faut savoir sur Git',
+  description: 'Apprenez les bases essentielles de Git de manière simple et intuitive.',
   icons: {
     icon: '/favicon.ico',
-  }
-}
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
+  const currentYear = new Date().getFullYear();
+
   return (
     <html lang="fr">
-      <body className={`${inter.className} bg-black`}>
-        {children}
+      <body className={`${inter.className} bg-black text-gray-100 flex flex-col min-h-screen`}>
+        <main className="flex-grow">{children}</main>
+        <footer className="bg-gray-900 text-center py-4 text-sm text-gray-500">
+          &copy; {currentYear} Tous droits réservés.
+        </footer>
       </body>
     </html>
-  )
+  );
 }

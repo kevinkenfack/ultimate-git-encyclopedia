@@ -60,7 +60,7 @@ export default function UltimateGitCommandEncyclopedia() {
           role="img" 
           aria-label="Dark moon and octopus"
         >
-          🌑 Encyclopédie Obscure de Git 🐙
+          🌑 Apprenez git facilement 🐙
         </h1>
 
         {/* Search Bar */}
