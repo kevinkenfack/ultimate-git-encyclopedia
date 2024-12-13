@@ -334,7 +334,7 @@ export default function UltimateGitCommandEncyclopedia() {
                   >
                     {progress.completedCommands.includes(selectedSubCommand.fullCommand)
                       ? "✓ Commande maîtrisée"
-                      : "J'ai compris cette commande"}
+                      : "J&apos;ai compris cette commande"}
                   </button>
                 </div>
               </div>
