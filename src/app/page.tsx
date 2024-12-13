@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   GitBranch, ChevronRight, Copy, Check, Search 
 } from 'lucide-react';
 import { GitCommandCategories } from '@/data/gitCommands';
+import confetti from 'canvas-confetti';
+import { Progress, calculateLevel, calculateExperience, loadProgress, saveProgress } from '@/lib/progress';
 
 type SubCommand = {
   fullCommand: string;
@@ -31,6 +33,19 @@ export default function UltimateGitCommandEncyclopedia() {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCategories, setFilteredCategories] = useState<Category[]>(GitCommandCategories);
+  const [progress, setProgress] = useState<Progress>(loadProgress());
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('gitProgress');
+    if (saved) {
+      setProgress(JSON.parse(saved));
+    }
+  }, []);
 
   const handleCopyCommand = (command: string) => {
     navigator.clipboard.writeText(command);
@@ -52,6 +67,31 @@ export default function UltimateGitCommandEncyclopedia() {
     setFilteredCategories(filtered);
   };
 
+  const markCommandAsCompleted = (command: string) => {
+    if (!progress.completedCommands.includes(command)) {
+      const newCompletedCommands = [...progress.completedCommands, command];
+      const newLevel = calculateLevel(newCompletedCommands);
+      const newExperience = calculateExperience(newCompletedCommands);
+      
+      if (newLevel > progress.level) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+
+      const newProgress = {
+        completedCommands: newCompletedCommands,
+        level: newLevel,
+        experience: newExperience
+      };
+
+      setProgress(newProgress);
+      saveProgress(newProgress);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900 text-gray-100 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
@@ -63,7 +103,73 @@ export default function UltimateGitCommandEncyclopedia() {
           🌑 Apprenez git facilement 🐙
         </h1>
 
-        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gray-800/60 p-4 rounded-xl backdrop-blur-md border border-gray-700 hover:border-red-500 transition-all">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm">Niveau actuel</p>
+                  {isClient && (
+                    <p className="text-xl font-bold text-white">{progress.level}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/60 p-4 rounded-xl backdrop-blur-md border border-gray-700 hover:border-red-500 transition-all">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm">Commandes maîtrisées</p>
+                  {isClient && (
+                    <p className="text-xl font-bold text-white">{progress.completedCommands.length}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/60 p-4 rounded-xl backdrop-blur-md border border-gray-700 hover:border-red-500 transition-all">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm">Points d'expérience</p>
+                  {isClient && (
+                    <p className="text-xl font-bold text-white">{progress.experience}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {isClient && (
+            <div className="mt-4 bg-gray-800/60 p-4 rounded-xl backdrop-blur-md border border-gray-700">
+              <div className="flex justify-between text-sm text-gray-400 mb-1">
+                <span>Progression vers niveau {progress.level + 1}</span>
+                <span>{progress.experience % 100}%</span>
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-red-500 to-pink-500 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${progress.experience % 100}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="mb-8 relative">
           <input 
             type="text" 
@@ -76,7 +182,6 @@ export default function UltimateGitCommandEncyclopedia() {
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 sm:gap-8">
-          {/* Categories */}
           <div className="bg-gray-900/60 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-gray-800 shadow-2xl">
             <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-600">
               <GitBranch className="inline mr-2" /> Catégories
@@ -103,7 +208,6 @@ export default function UltimateGitCommandEncyclopedia() {
             ))}
           </div>
 
-          {/* Commandes de la Catégorie */}
           <div className="bg-gray-900/60 backdrop-blur-md p-4 sm:p-8 rounded-2xl border border-gray-800 shadow-2xl">
             {selectedCategory ? (
               <>
@@ -138,7 +242,6 @@ export default function UltimateGitCommandEncyclopedia() {
             )}
           </div>
 
-          {/* Sous-commandes et Détails */}
           <div className="md:col-span-2 bg-gray-900/60 backdrop-blur-md p-4 sm:p-8 rounded-2xl border border-gray-800 shadow-2xl">
             {selectedCommand ? (
               <div>
@@ -220,6 +323,19 @@ export default function UltimateGitCommandEncyclopedia() {
                       {selectedSubCommand.difficulty}
                     </span>
                   </div>
+
+                  <button 
+                    onClick={() => markCommandAsCompleted(selectedSubCommand.fullCommand)}
+                    className={`mt-4 w-full p-3 rounded-lg transition-all ${
+                      progress.completedCommands.includes(selectedSubCommand.fullCommand)
+                        ? 'bg-green-600 hover:bg-green-700'
+                        : 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700'
+                    }`}
+                  >
+                    {progress.completedCommands.includes(selectedSubCommand.fullCommand)
+                      ? "✓ Commande maîtrisée"
+                      : "J'ai compris cette commande"}
+                  </button>
                 </div>
               </div>
             )}
