@@ -26,6 +26,20 @@ type Category = {
   commands: Command[];
 };
 
+// Définir le type pour la configuration confetti
+type ConfettiConfig = {
+  particleCount?: number;
+  spread?: number;
+  origin?: {
+    x?: number;
+    y?: number;
+  };
+  colors?: string[];
+  startVelocity?: number;
+  ticks?: number;
+  zIndex?: number;
+};
+
 export default function UltimateGitCommandEncyclopedia() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedCommand, setSelectedCommand] = useState<Command | null>(null);
@@ -72,12 +86,6 @@ export default function UltimateGitCommandEncyclopedia() {
     setFilteredCategories(filtered);
   };
 
-  const handleConfetti = (config: any) => {
-    if (mounted) {
-      confetti(config);
-    }
-  };
-
   const markCommandAsCompleted = (command: string) => {
     if (!progress.completedCommands.includes(command)) {
       const newCompletedCommands = [...progress.completedCommands, command];
@@ -87,11 +95,16 @@ export default function UltimateGitCommandEncyclopedia() {
       if (newLevel > progress.level) {
         const duration = 3000;
         const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+        const defaults: ConfettiConfig = { 
+          startVelocity: 30, 
+          spread: 360, 
+          ticks: 60, 
+          zIndex: 0 
+        };
 
         const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-        const interval: any = setInterval(() => {
+        const interval = setInterval(() => {
           const timeLeft = animationEnd - Date.now();
 
           if (timeLeft <= 0) {
